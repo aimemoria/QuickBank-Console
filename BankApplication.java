@@ -1,126 +1,146 @@
-
-/** Program header: BankApplication.java
- *
- * Author:    AIME SERGE TUYISHIME
- * Class:     Java
- *
- *OCCC
- * Assignment 3
- * chapter IX
+/**
+ * BankApplication.java
+ * Author: Aime Serge Tuyishime
  */
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class BankApplication {
 
-	public static void main(String[] args) {
-		
-				CheckingAccount checkingAccount = new CheckingAccount ();
-				
-				//opening Scanner
-				Scanner input = new Scanner (System.in);
-				Scanner keyboard = new Scanner (System.in);
-				
-				
-				System.out.println ("\n");
-				System.out.println ("_________________________\n");
-				System.out.println ("  MID-FIRST BANKING APP");
-				System.out.println ("_________________________\n");
-				
-				//user input
-				System.out.print("Enter unique ID: ");
-				String uniqueID = keyboard.nextLine();
-				
-				while(uniqueID.length() < 4){
-					System.out.println("!!!ERROR: unique IDs are at least 4 characters long!!!: ");
-					System.out.print("Enter unique ID: ");					
-					uniqueID = keyboard.nextLine();
-					
-				}
-				//set Id  to details
-				checkingAccount.setUniqualId(uniqueID);				
-				
-				//user input
-				System.out.print("Enter The Initial Balance: ");
-				double acctBalance = input.nextDouble();
-				
-				while(acctBalance < 500){
-					System.out.println("!!!ERROR: new account need at least $500!!!: ");
-					System.out.print("Enter The Inintial Balance: ");
-					acctBalance = input.nextDouble();
-					
-				}				
-				checkingAccount.setAcctBalance(acctBalance);				
-				System.out.print("Enter annual interest rate as apercentage: ");
-				double annualInterestRate = input.nextDouble();
-				
-				int option;
-				do {
-					System.out.println ("\n");
-					System.out.println ("\n");
-			    System.out.println ("________________________\n");
-			    System.out.println (" *    Options Below    *");
-			    System.out.println ("________________________");
-				System.out.println ("1. Deposit");
-				System.out.println ("2. View Interest Rate ");
-				System.out.println ("3. View Account Details");
-				System.out.println ("4. Exit\n");
-				System.out.print ("ENTER YOUR SELECTION # ");
-				option = input.nextInt();
-				
-				
-				while(option > 4) {
-					System.out.println("INVALID SELECTION - TRY AGAIN!");
-					System.out.print ("# ");
-					option = input.nextInt();
-				}
-				
-				
-								
-				if (option == 1){ 
-					System.out.print ("Enter Deposit Ammount: ");	
-					double theDeposit = input.nextDouble();
-					while(theDeposit < 1) {
-						System.out.println("ERROR: deposit must must be great than $0!!!");
-						System.out.print ("Enter Your Deposit Amount: ");
-						theDeposit = input.nextDouble();
-					}
-					
-					//set theDepositAmount to depositAmount
-					checkingAccount.depositCash(theDeposit);
-					//Calculate new Balance 
-					 double AccountNewBalance = checkingAccount.getAcctBalance();					
-					System.out.print("New Balance:  ");
-				    System.out.println(AccountNewBalance);
-				}
-				else if (option == 2 ) {
-					
-					double dailyInterestRate = checkingAccount.getDailyIntRate(annualInterestRate);					
-					System.out.print("Your Daily Interest is: ");
-					//dailyInterestRate = Math.round(dailyInterestRate);
-					System.out.println(dailyInterestRate);
-					
-				}
-				
-				else if (option == 3) {
-					
-					System.out.print("Uniqual ID: ");
-					String TheUniqualID =checkingAccount.getUniqualId();
-					System.out.println(TheUniqualID);		
-					System.out.print("Account Creation Date/Time: " + checkingAccount.getCreatedDataTime() + "\n");					
-					System.out.println("Balance: " + checkingAccount.getAcctBalance());
-					System.out.println("Daily Interest Amount: " + checkingAccount.getDailyIntRate(annualInterestRate));
-				
-				}
-				
-				else if (option == 4) {
+    public static void main(String[] args) {
+        CheckingAccount checkingAccount = new CheckingAccount();
+        Scanner scanner = new Scanner(System.in);
 
-					System.out.println("Program exiting..."); 
-					
-					  System.exit(0);
-				}
-				System.out.println ("________________________");
-				
-				}while(option != 4);
-				
-	}
+        System.out.println();
+        System.out.println("_____________________________");
+        System.out.println("    QUICKBANK CONSOLE APP    ");
+        System.out.println("_____________________________");
+        System.out.println();
+
+        // Collect unique ID
+        System.out.print("Enter unique ID: ");
+        String uniqueID = scanner.nextLine();
+
+        while (uniqueID.length() < 4) {
+            System.out.println("ERROR: Unique ID must be at least 4 characters.");
+            System.out.print("Enter unique ID: ");
+            uniqueID = scanner.nextLine();
+        }
+        checkingAccount.setUniqueID(uniqueID);
+
+        // Collect initial balance
+        double acctBalance = readDouble(scanner, "Enter the initial balance: ");
+        while (acctBalance < 500) {
+            System.out.println("ERROR: New accounts require at least $500.");
+            acctBalance = readDouble(scanner, "Enter the initial balance: ");
+        }
+        checkingAccount.setAcctBalance(acctBalance);
+
+        // Collect annual interest rate
+        double annualInterestRate = readDouble(scanner, "Enter annual interest rate as a percentage: ");
+        while (annualInterestRate <= 0) {
+            System.out.println("ERROR: Interest rate must be greater than 0.");
+            annualInterestRate = readDouble(scanner, "Enter annual interest rate as a percentage: ");
+        }
+        checkingAccount.setAnnualInterestRate(annualInterestRate);
+
+        // Main menu loop
+        int option;
+        do {
+            System.out.println();
+            System.out.println("____________________________");
+            System.out.println("        MAIN MENU           ");
+            System.out.println("____________________________");
+            System.out.println("1. Deposit");
+            System.out.println("2. Withdraw");
+            System.out.println("3. View Interest Rate");
+            System.out.println("4. View Account Details");
+            System.out.println("5. Exit");
+            System.out.println();
+            option = readInt(scanner, "Enter your selection: ");
+
+            while (option < 1 || option > 5) {
+                System.out.println("INVALID SELECTION - TRY AGAIN!");
+                option = readInt(scanner, "Enter your selection: ");
+            }
+
+            switch (option) {
+                case 1:
+                    double deposit = readDouble(scanner, "Enter deposit amount: ");
+                    while (deposit <= 0) {
+                        System.out.println("ERROR: Deposit must be greater than $0.");
+                        deposit = readDouble(scanner, "Enter deposit amount: ");
+                    }
+                    checkingAccount.depositCash(deposit);
+                    System.out.printf("New Balance: $%.2f%n", checkingAccount.getAcctBalance());
+                    break;
+
+                case 2:
+                    double withdrawal = readDouble(scanner, "Enter withdrawal amount: ");
+                    while (withdrawal <= 0) {
+                        System.out.println("ERROR: Withdrawal must be greater than $0.");
+                        withdrawal = readDouble(scanner, "Enter withdrawal amount: ");
+                    }
+                    if (withdrawal > checkingAccount.getAcctBalance()) {
+                        System.out.println("ERROR: Insufficient funds.");
+                    } else {
+                        checkingAccount.withdrawCash(withdrawal);
+                        System.out.printf("New Balance: $%.2f%n", checkingAccount.getAcctBalance());
+                    }
+                    break;
+
+                case 3:
+                    double dailyRate = checkingAccount.getDailyIntRate(annualInterestRate);
+                    System.out.printf("Your daily interest is: $%.2f%n", dailyRate);
+                    break;
+
+                case 4:
+                    System.out.println("____________________________");
+                    System.out.println("      ACCOUNT DETAILS       ");
+                    System.out.println("____________________________");
+                    System.out.println("Unique ID: " + checkingAccount.getUniqueID());
+                    System.out.println("Created: " + checkingAccount.getCreatedDateTime());
+                    System.out.printf("Balance: $%.2f%n", checkingAccount.getAcctBalance());
+                    System.out.printf("Daily Interest: $%.2f%n", checkingAccount.getDailyIntRate(annualInterestRate));
+                    break;
+
+                case 5:
+                    System.out.println("Thank you for using QuickBank. Goodbye!");
+                    break;
+            }
+            System.out.println("____________________________");
+
+        } while (option != 5);
+
+        scanner.close();
+    }
+
+    private static double readDouble(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                double value = scanner.nextDouble();
+                scanner.nextLine();
+                return value;
+            } catch (InputMismatchException e) {
+                System.out.println("ERROR: Please enter a valid number.");
+                scanner.nextLine();
+            }
+        }
+    }
+
+    private static int readInt(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                int value = scanner.nextInt();
+                scanner.nextLine();
+                return value;
+            } catch (InputMismatchException e) {
+                System.out.println("ERROR: Please enter a valid number.");
+                scanner.nextLine();
+            }
+        }
+    }
 }

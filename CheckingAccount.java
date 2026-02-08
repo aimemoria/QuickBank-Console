@@ -1,85 +1,75 @@
-
-/** Program header: CheckingAccount.java
- *
- * Author:    AIME SERGE TUYISHIME
- * Class:     Java
- *
- *OCCC
- * Assignment 3
- * chapter IX
+/**
+ * CheckingAccount.java
+ * Author: Aime Serge Tuyishime
  */
 
-
 import java.util.Date;
+
 public class CheckingAccount {
 
-	
+    private String uniqueID;
+    private double acctBalance;
+    private double annualInterestRate;
+    private Date createdDateTime;
 
-	private String uniqualID;
-	private double acctBalance;
-	private double annualInterestRate;
-	private Date createdDataTime;
+    public CheckingAccount() {
+        this.createdDateTime = new Date(System.currentTimeMillis());
+    }
 
-	// constructor
-	public CheckingAccount() {
-		this.createdDataTime=new Date (System.currentTimeMillis());
-	}
+    public CheckingAccount(double initialBalance, String uniqueID, double annualInterestRate) {
+        this.uniqueID = uniqueID;
+        this.acctBalance = initialBalance;
+        this.annualInterestRate = annualInterestRate;
+        this.createdDateTime = new Date(System.currentTimeMillis());
+    }
 
-	public CheckingAccount(double initialBlance, String uniqualId, double annualInterestRate) {
-		this.uniqualID = uniqualId;
-		this.acctBalance = initialBlance;
-		this.annualInterestRate = annualInterestRate;
-		this.createdDataTime=new Date (System.currentTimeMillis());
-	}
+    public String getUniqueID() {
+        return uniqueID;
+    }
 
-	// getters
-	public String getUniqualId() {
-		return uniqualID;
-	}
+    public void setUniqueID(String uniqueID) {
+        this.uniqueID = uniqueID;
+    }
 
-	public double getAnnualInterestRate() {
-		return annualInterestRate;
-	}
+    public double getAcctBalance() {
+        return acctBalance;
+    }
 
-	public void setAnnualInterestRate(double annualInterestRate) {
-		this.annualInterestRate = annualInterestRate;
-	}
+    public void setAcctBalance(double balance) {
+        this.acctBalance = balance;
+    }
 
-	// setters
-	public void setUniqualId(String uniqualId) {
-		this.uniqualID = uniqualId;
-	}
-	
-	public double getAcctBalance() {
-		return acctBalance;
-	}
+    public double getAnnualInterestRate() {
+        return annualInterestRate;
+    }
 
-	public void setAcctBalance(double balance) {
-		this.acctBalance = balance;
-	}
+    public void setAnnualInterestRate(double annualInterestRate) {
+        this.annualInterestRate = annualInterestRate;
+    }
 
-	public Date getCreatedDataTime() {
-		return createdDataTime;
-	}
+    public Date getCreatedDateTime() {
+        return createdDateTime;
+    }
 
-	public double getDailyIntRate(double annualIntRate) {
-		double dailyInterestRate = (this.acctBalance * annualIntRate / 36000);
-		int n =2;
-		 dailyInterestRate = Math.round( dailyInterestRate*Math.pow(10,n))/Math.pow(10,n);		
-		return  dailyInterestRate;
-	}
-	// Other methods than constructors
-	
-	public double depositCash(double deposit) {
-		this.acctBalance += deposit;
-		return this.acctBalance;
-	}
+    public double getDailyIntRate(double annualIntRate) {
+        double dailyInterestRate = (this.acctBalance * annualIntRate / 36500);
+        dailyInterestRate = Math.round(dailyInterestRate * 100.0) / 100.0;
+        return dailyInterestRate;
+    }
 
-	
+    public double depositCash(double deposit) {
+        this.acctBalance += deposit;
+        return this.acctBalance;
+    }
 
-	@Override
-	public String toString() {
-		return "CheckingAccount [uniqualID=" + uniqualID + ", acctBalance=" + acctBalance + ", annualInterestRate="
-				+ annualInterestRate + ", createdDataTime=" + createdDataTime + "]";
-	}
+    public double withdrawCash(double amount) {
+        this.acctBalance -= amount;
+        return this.acctBalance;
+    }
+
+    @Override
+    public String toString() {
+        return "CheckingAccount [uniqueID=" + uniqueID + ", acctBalance=" + acctBalance
+                + ", annualInterestRate=" + annualInterestRate + ", createdDateTime=" + createdDateTime + "]";
+    }
 }
